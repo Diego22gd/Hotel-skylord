@@ -8,12 +8,17 @@
             <h1 class="hotel-name">Hotel Skylord</h1>
           </div>
           <div class="navbar-right">
-            <!-- Enlaces de navegación a la derecha -->
             <ul class="nav-links">
-              <li><router-link to="/rooms">Habitaciones</router-link></li>
-              <li><router-link to="/reservations">Reservas</router-link></li>
-              <li><router-link to="/login">Iniciar Sesión</router-link></li>
-            </ul>
+            <li>
+                <router-link to="/nosotros">Nosotros</router-link>
+            </li>
+            <li>
+              <router-link to="/reservas">Reservas</router-link>
+            </li>
+            <li>
+              <router-link to="/login">Iniciar Sesión</router-link>
+            </li>
+          </ul>
           </div>
         </nav>
         
@@ -73,7 +78,7 @@
          <div class="information">
           
           <div class="contacto">
-          <H3>Contacto para reservas</H3>
+          <h3>Contacto para reservas</h3>
           <ol class="lista">
               
             <p>WhatsApp Reservas (Recepción): (+58) 0414-4011273</p>
@@ -82,13 +87,14 @@
           </ol>
         </div>
         <div class="direccion">
-            <H3>Direccion</H3>
+            <h3>Direccion</h3>
             <p class="tdirection"> Av. Salvador Feo la Cruz, Naguanagua, Carabobo</p>
         </div>
         </div>
         </div>
   
       </div>
+  <router-view /> 
     
   
   </template>
@@ -175,7 +181,7 @@ export default {
     }
   }
 };
-  
+
   
   </script>
 
@@ -437,6 +443,21 @@ export default {
 .tdirection{
    font-size: 30px;
 }
+.nav-links li {
+  cursor: default;  /* Esto desactiva el puntero del ratón para los enlaces */
+  text-decoration: none;  /* Puede quitar el subrayado del enlace */
+  color: inherit;  /* El color del enlace podría hacer que parezca texto común */
+}
+.nav-links li {
+  list-style: none;  /* Remueve el punto de lista */
+}
+
+.nav-links a {
+  cursor: pointer;  /* Hace que el cursor cambie a una mano, indicando un enlace */
+  text-decoration: underline;  /* Añade subrayado para hacer que se vea como un enlace */
+  color: blue;  /* Color de enlace típico */
+}
+
 
 </style>
 

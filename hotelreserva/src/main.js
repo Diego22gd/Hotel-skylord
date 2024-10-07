@@ -1,14 +1,8 @@
+// src/main.js
+import { createApp } from 'vue';
+import App from './App.vue';
+import router from './router'; // Importa el enrutador
 
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
-
-const app = createApp(App)
-if (process.env.NODE_ENV === 'production') {
-    Vue.config.devtools = false;
-  }
-  
-
-app.use(router)
-
-app.mount('#app')
+createApp(App)
+  .use(router) // Usa el enrutador
+  .mount('#app');
