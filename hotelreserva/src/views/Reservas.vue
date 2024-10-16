@@ -1,6 +1,9 @@
 <template>
+  <div class="titulo">
+    <h1 class="nos">Reservas</h1>
+  </div>
   <div class="reservas">
-    <h1>Reservas</h1>
+    
     <form @submit.prevent="checkAvailability">
       <div class="form-group">
         <label for="checkIn">Fecha de Entrada:</label>
@@ -130,5 +133,34 @@ button:hover {
 .age-input-group {
   margin-bottom: 10px;
 }
+.titulo{
+  
+  position: relative;
+  height: 50vh;
+  background-image: url('@/assets/hotel.webp'); /* Aquí va la imagen del hotel */
+  background-position: center center;
+  background-size: cover;
+  color: rgb(247, 247, 247);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.titulo {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+.nos {
+  font-size: 4em;
+  font-weight: bold;
+  font-style: italic;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+}
+
+
+
 </style>
 

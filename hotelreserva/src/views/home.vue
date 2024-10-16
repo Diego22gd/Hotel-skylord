@@ -2,25 +2,6 @@
     <div class="home">
       <!-- Header con barra de navegación -->
       <header class="header">
-        <nav class="navbar">
-          <div class="navbar-left">
-            <!-- Nombre del hotel a la izquierda -->
-            <h1 class="hotel-name">Hotel Skylord</h1>
-          </div>
-          <div class="navbar-right">
-            <ul class="nav-links">
-            <li>
-                <router-link to="/nosotros">Nosotros</router-link>
-            </li>
-            <li>
-              <router-link to="/reservas">Reservas</router-link>
-            </li>
-            <li>
-              <router-link to="/login">Iniciar Sesión</router-link>
-            </li>
-          </ul>
-          </div>
-        </nav>
         
         <div class="hero">
   
@@ -190,13 +171,13 @@ export default {
 
 .home {
   font-family: Arial, sans-serif;
-  margin: -8px;
+  
 }
 
 /* Estilos del header */
 .header {
   position: relative;
-  height: 100vh;
+  height: 80vh;
   background-image: url('@/assets/hotel.webp'); /* Aquí va la imagen del hotel */
   background-position: center center;
   background-size: cover;
@@ -204,6 +185,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  
 }
 .header::before {
   content: '';
@@ -261,6 +243,7 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100%;
+ 
 }
 
 .hero-title {
@@ -452,11 +435,7 @@ export default {
   list-style: none;  /* Remueve el punto de lista */
 }
 
-.nav-links a {
-  cursor: pointer;  /* Hace que el cursor cambie a una mano, indicando un enlace */
-  text-decoration: underline;  /* Añade subrayado para hacer que se vea como un enlace */
-  color: blue;  /* Color de enlace típico */
-}
+
 
 
 </style>

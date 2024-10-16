@@ -1,6 +1,9 @@
 <template>
+  <div class="titulo">
+    <h1 class="nos">iniciar Sesión</h1>
+  </div>
   <div class="login">
-    <h1>Iniciar Sesión</h1>
+    
     <form @submit.prevent="handleLogin">
       <div class="form-group">
         <label for="email">Correo Electrónico:</label>
@@ -195,6 +198,32 @@ button:hover {
 .close {
   cursor: pointer;
   float: right;
+}
+.titulo{
+  
+  position: relative;
+  height: 50vh;
+  background-image: url('@/assets/hotel.webp'); /* Aquí va la imagen del hotel */
+  background-position: center center;
+  background-size: cover;
+  color: rgb(247, 247, 247);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.titulo {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+.nos {
+  font-size: 4em;
+  font-weight: bold;
+  font-style: italic;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
 }
 </style>
 
