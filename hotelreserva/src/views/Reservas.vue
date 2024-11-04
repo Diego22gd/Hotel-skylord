@@ -3,7 +3,6 @@
     <h1 class="nos">Reservas</h1>
   </div>
   <div class="reservas">
-    
     <form @submit.prevent="checkAvailability">
       <div class="form-group">
         <label for="checkIn">Fecha de Entrada:</label>
@@ -13,19 +12,6 @@
         <label for="checkOut">Fecha de Salida:</label>
         <input type="date" id="checkOut" v-model="checkOutDate" required />
       </div>
-      <div class="form-group">
-        <label for="guests">Número de Personas:</label>
-        <input type="number" id="guests" v-model="numberOfGuests" min="1" @change="updateAges" required />
-      </div>
-
-      <div v-if="numberOfGuests > 0">
-        <h3>Ingrese la edad de cada huésped:</h3>
-        <div v-for="index in numberOfGuests" :key="index" class="age-input-group">
-          <label :for="'age' + index">Huésped {{ index }}:</label>
-          <input type="number" :id="'age' + index" v-model="guestAges[index - 1]" min="0" required />
-        </div>
-      </div>
-
       <button type="submit">Buscar Habitaciones Disponibles</button>
     </form>
 
@@ -35,12 +21,39 @@
         <li v-for="(room, index) in availableRooms" :key="index">
           <h3>{{ room.name }}</h3>
           <p>{{ room.description }}</p>
-          <button @click="reserveRoom(room)">Reservar</button>
+          <button @click="openReservationModal(room)">Reservar</button>
         </li>
       </ul>
     </div>
     <div v-else-if="searchPerformed">
       <p>No hay habitaciones disponibles para esas fechas.</p>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div v-if="isReservationModalOpen" class="modal">
+    <div class="modal-content">
+      <span class="close" @click="closeReservationModal">&times;</span>
+      <h2>Realizar Reserva</h2>
+      <form @submit.prevent="confirmReservation">
+        <div class="form-group">
+          <label for="clientName">Nombre del Cliente:</label>
+          <input type="text" id="clientName" v-model="newReservation.clientName" required />
+        </div>
+        <div class="form-group">
+          <label for="clientEmail">Correo Electrónico:</label>
+          <input type="email" id="clientEmail" v-model="newReservation.clientEmail" required />
+        </div>
+        <div class="form-group">
+          <label for="clientPhone">Número de Teléfono:</label>
+          <input type="text" id="clientPhone" v-model="newReservation.clientPhone" required />
+        </div>
+        <div class="form-group">
+          <label for="additionalNotes">Notas Adicionales:</label>
+          <textarea id="additionalNotes" v-model="newReservation.additionalNotes"></textarea>
+        </div>
+        <button type="submit">Confirmar Reserva</button>
+      </form>
     </div>
   </div>
 </template>
@@ -55,9 +68,16 @@ export default {
     return {
       checkInDate: '',
       checkOutDate: '',
-      numberOfGuests: 1,
-      guestAges: [],
       availableRooms: [],
+      searchPerformed: false,
+      isReservationModalOpen: false,
+      selectedRoom: null,
+      newReservation: {
+        clientName: '',
+        clientEmail: '',
+        clientPhone: '',
+        additionalNotes: ''
+      },
       rooms: [
         {
           name: 'Habitación Simple',
@@ -74,21 +94,25 @@ export default {
           description: 'Amplia y lujosa suite para disfrutar de su estadía.',
           image: roomImage3
         }
-      ],
-      searchPerformed: false
+      ]
     };
   },
   methods: {
-    updateAges() {
-      this.guestAges = Array.from({ length: this.numberOfGuests }, () => '');
-    },
     checkAvailability() {
       this.searchPerformed = true;
-      // Simulamos que todas las habitaciones están disponibles.
-      this.availableRooms = this.rooms;
+      this.availableRooms = this.rooms; // Asumimos que todas las habitaciones están disponibles
     },
-    reserveRoom(room) {
-      alert(`Has reservado: ${room.name}`);
+    openReservationModal(room) {
+      this.selectedRoom = room;
+      this.isReservationModalOpen = true;
+    },
+    closeReservationModal() {
+      this.isReservationModalOpen = false;
+      this.selectedRoom = null;
+    },
+    confirmReservation() {
+      alert(`Reserva confirmada para ${this.selectedRoom.name} por ${this.newReservation.clientName}.`);
+      this.closeReservationModal();
     }
   }
 };
@@ -130,27 +154,17 @@ button:hover {
   background-color: #0056b3;
 }
 
-.age-input-group {
-  margin-bottom: 10px;
-}
-.titulo{
-  
+.titulo {
   position: relative;
   height: 50vh;
-  background-image: url('@/assets/hotel.webp'); /* Aquí va la imagen del hotel */
+  background-image: url('@/assets/hotel.webp');
   background-position: center center;
   background-size: cover;
   color: rgb(247, 247, 247);
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.titulo {
-  text-align: center;
-  display: flex;
   justify-content: center;
   align-items: center;
-  
+  text-align: center;
 }
 
 .nos {
@@ -160,7 +174,30 @@ button:hover {
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
 }
 
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
 
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 500px;
+  width: 100%;
+}
 
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
 </style>
-

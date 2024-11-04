@@ -1,46 +1,211 @@
 <template>
-  <div>
-    <h1>Gestión de Reservaciones</h1>
-    <ul>
-      <li v-for="reservation in reservations" :key="reservation.id">
-        {{ reservation.name }} - {{ reservation.room }} 
-        - {{ reservation.status }}
-        <button @click="markAsPaid(reservation.id)">Marcar como Pagado</button>
-      </li>
-    </ul>
+  <div class="admin-view">
+    <header class="admin-header">
+      <h2>Administradores</h2>
+      <button @click="logout">Cerrar sesión</button>
+      
+    </header>
+
+    <!-- Tabla de Habitaciones -->
+    <section class="rooms-section">
+      <h3>Habitaciones</h3>
+      <table class="rooms-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Estado</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="room in rooms" :key="room.id">
+            <td>{{ room.id }}</td>
+            <td>{{ room.status }}</td>
+            <td>
+              <button @click="editRoom(room.id)">Editar</button>
+              <button @click="deleteRoom(room.id)">Borrar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Tabla de Reservas -->
+    <section class="reservations-section">
+      <h3>Reservas</h3>
+      <table class="reservations-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Fecha de Entrada</th>
+            <th>Fecha de Salida</th>
+            <th>Estado</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="reservation in reservations" :key="reservation.id">
+            <td>{{ reservation.id }}</td>
+            <td>{{ reservation.client }}</td>
+            <td>{{ reservation.checkInDate }}</td>
+            <td>{{ reservation.checkOutDate }}</td>
+            <td>{{ reservation.status }}</td>
+            <td>
+              <button @click="openEditModal(reservation)">Editar</button>
+              <button @click="deleteReservation(reservation.id)">Borrar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
   </div>
+  <div v-if="showEditModal" class="modal">
+      <div class="modal-content">
+        <h3>Editar Estado de Reserva</h3>
+        <p>Selecciona un nuevo estado para la reserva de {{ currentReservation.client }}</p>
+        
+        <select v-model="selectedStatus">
+          <option value="Confirmada">Confirmada</option>
+          <option value="En espera">En espera</option>
+          <option value="Rechazada">Rechazada</option>
+        </select>
+
+        <div class="modal-actions">
+          <button @click="saveStatus">Guardar</button>
+          <button @click="closeEditModal">Cancelar</button>
+        </div>
+      </div>
+    </div>
 </template>
 
 <script>
-import axios from 'axios';
-
 export default {
   data() {
     return {
-      reservations: []
-    }
-  },
-  mounted() {
-    // Obtener reservaciones de la API
-    axios.get('https://api.hotel.com/reservations')
-      .then(response => {
-        this.reservations = response.data;
-      });
+      rooms: [
+        { id: 1, status: 'Disponible' },
+        { id: 2, status: 'Ocupada' },
+        { id: 3, status: 'En Mantenimiento' },
+      ],
+      showEditModal: false,
+      currentReservation: null,
+      selectedStatus: '',
+      reservations: [
+        {
+          id: 1,
+          client: 'Juan Pérez',
+          checkInDate: '2024-11-10',
+          checkOutDate: '2024-11-15',
+          status: 'Confirmada',
+        },
+        {
+          id: 2,
+          client: 'Maria González',
+          checkInDate: '2024-11-12',
+          checkOutDate: '2024-11-20',
+          status: 'Pendiente',
+        },
+      ],
+    };
   },
   methods: {
-    markAsPaid(id) {
-      // Actualizar el estado de la reservación
-      axios.put(`https://api.hotel.com/reservations/${id}`, { status: 'Paid' })
-        .then(() => {
-          alert('Estado actualizado a pagado');
-          this.reservations = this.reservations.map(reservation => {
-            if (reservation.id === id) {
-              reservation.status = 'Paid';
-            }
-            return reservation;
-          });
-        });
+    logout() {
+      localStorage.removeItem('isAuthenticated');
+      this.$router.push({ name: 'Login' });
     }
-  }
-}
+  },
+    addNew() {
+      // Lógica para añadir un nuevo registro
+    },
+    deleteSelected() {
+      // Lógica para borrar registros seleccionados
+    },
+    activateSelected() {
+      // Lógica para activar registros seleccionados
+    },
+    deactivateSelected() {
+      // Lógica para desactivar registros seleccionados
+    },
+    editRoom(id) {
+      // Lógica para editar una habitación específica
+    },
+    deleteRoom(id) {
+      // Lógica para borrar una habitación específica
+    },
+    openEditModal(reservation) {
+      this.currentReservation = reservation;
+      this.selectedStatus = reservation.status;
+      this.showEditModal = true;
+    },
+    // Guardar el nuevo estado de la reserva
+    saveStatus() {
+      if (this.currentReservation) {
+        this.currentReservation.status = this.selectedStatus;
+        this.closeEditModal();
+      }
+    },
+    // Cerrar modal de edición
+    closeEditModal() {
+      this.showEditModal = false;
+      this.currentReservation = null;
+      this.selectedStatus = '';
+  }, 
+    deleteReservation(id) {
+      if (confirm(`¿Estás seguro de que deseas eliminar la reserva ${id}?`)) {
+        this.reservations = this.reservations.filter((res) => res.id !== id);
+        alert(`Reserva ${id} eliminada exitosamente.`);
+      }
+    },
+};
 </script>
+
+<style scoped>
+.admin-view {
+  padding: 20px;
+}
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.admin-actions button {
+  margin-right: 10px;
+}
+.rooms-table, .reservations-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.rooms-table th, .rooms-table td,
+.reservations-table th, .reservations-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  width: 300px;
+}
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+.modal-actions button {
+  margin-left: 10px;
+}
+</style>
