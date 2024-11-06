@@ -2,12 +2,13 @@
   <div class="admin-view">
     <header class="admin-header">
       <h2>Administradores</h2>
+      <button @click="bhabitaciones">Habitaciones</button>
+      <button @click="breservas">Reservas</button>
       <button @click="logout">Cerrar sesión</button>
-      
     </header>
 
     <!-- Tabla de Habitaciones -->
-    <section class="rooms-section">
+    <section v-if="activeSection === 'habitaciones'" class="rooms-section">
       <h3>Habitaciones</h3>
       <table class="rooms-table">
         <thead>
@@ -22,7 +23,7 @@
             <td>{{ room.id }}</td>
             <td>{{ room.status }}</td>
             <td>
-              <button @click="editRoom(room.id)">Editar</button>
+              <button @click="editRoom(room)">Editar</button>
               <button @click="deleteRoom(room.id)">Borrar</button>
             </td>
           </tr>
@@ -31,7 +32,7 @@
     </section>
 
     <!-- Tabla de Reservas -->
-    <section class="reservations-section">
+    <section v-if="activeSection === 'reservas'" class="reservations-section">
       <h3>Reservas</h3>
       <table class="reservations-table">
         <thead>
@@ -59,8 +60,9 @@
         </tbody>
       </table>
     </section>
-  </div>
-  <div v-if="showEditModal" class="modal">
+
+    <!-- Modal de edición de reserva -->
+    <div v-if="showEditModal" class="modal">
       <div class="modal-content">
         <h3>Editar Estado de Reserva</h3>
         <p>Selecciona un nuevo estado para la reserva de {{ currentReservation.client }}</p>
@@ -77,20 +79,38 @@
         </div>
       </div>
     </div>
+    
+    <!-- Modal de edición de habitación -->
+    <div v-if="showRoomEditModal" class="modal">
+      <div class="modal-content">
+        <h3>Editar Estado de Habitación</h3>
+        <p>Selecciona un nuevo estado para la habitación {{ currentRoom.id }}</p>
+        
+        <select v-model="currentRoom.status">
+          <option value="Disponible">Disponible</option>
+          <option value="Ocupada">Ocupada</option>
+          <option value="En Mantenimiento">En Mantenimiento</option>
+        </select>
+
+        <div class="modal-actions">
+          <button @click="saveRoomStatus">Guardar</button>
+          <button @click="closeRoomEditModal">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
   data() {
     return {
+      activeSection: 'habitaciones', // Valor inicial para mostrar la tabla de habitaciones
       rooms: [
         { id: 1, status: 'Disponible' },
         { id: 2, status: 'Ocupada' },
         { id: 3, status: 'En Mantenimiento' },
       ],
-      showEditModal: false,
-      currentReservation: null,
-      selectedStatus: '',
       reservations: [
         {
           id: 1,
@@ -107,56 +127,68 @@ export default {
           status: 'Pendiente',
         },
       ],
+      showEditModal: false,
+      currentReservation: null,
+      selectedStatus: '',
+      showRoomEditModal: false,
+      currentRoom: null,
     };
   },
   methods: {
+    bhabitaciones() {
+      this.activeSection = 'habitaciones';
+    },
+    breservas() {
+      this.activeSection = 'reservas';
+    },
     logout() {
       localStorage.removeItem('isAuthenticated');
       this.$router.push({ name: 'Login' });
-    }
-  },
-    addNew() {
-      // Lógica para añadir un nuevo registro
     },
-    deleteSelected() {
-      // Lógica para borrar registros seleccionados
+    editRoom(room) {
+      this.currentRoom = { ...room }; // Copia el objeto de la habitación
+      this.showRoomEditModal = true;
     },
-    activateSelected() {
-      // Lógica para activar registros seleccionados
+    saveRoomStatus() {
+      const roomIndex = this.rooms.findIndex(r => r.id === this.currentRoom.id);
+      if (roomIndex !== -1) {
+        this.rooms[roomIndex].status = this.currentRoom.status;
+      }
+      this.closeRoomEditModal();
     },
-    deactivateSelected() {
-      // Lógica para desactivar registros seleccionados
-    },
-    editRoom(id) {
-      // Lógica para editar una habitación específica
+    closeRoomEditModal() {
+      this.showRoomEditModal = false;
+      this.currentRoom = null;
     },
     deleteRoom(id) {
-      // Lógica para borrar una habitación específica
+      if (confirm(`¿Estás seguro de que deseas eliminar la habitación ${id}?`)) {
+        this.rooms = this.rooms.filter(room => room.id !== id);
+        alert(`Habitación ${id} eliminada exitosamente.`);
+      }
     },
     openEditModal(reservation) {
       this.currentReservation = reservation;
       this.selectedStatus = reservation.status;
       this.showEditModal = true;
     },
-    // Guardar el nuevo estado de la reserva
     saveStatus() {
       if (this.currentReservation) {
         this.currentReservation.status = this.selectedStatus;
         this.closeEditModal();
       }
     },
-    // Cerrar modal de edición
     closeEditModal() {
       this.showEditModal = false;
       this.currentReservation = null;
       this.selectedStatus = '';
-  }, 
+    },
     deleteReservation(id) {
       if (confirm(`¿Estás seguro de que deseas eliminar la reserva ${id}?`)) {
         this.reservations = this.reservations.filter((res) => res.id !== id);
         alert(`Reserva ${id} eliminada exitosamente.`);
       }
     },
+  },
 };
 </script>
 
@@ -169,9 +201,6 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-}
-.admin-actions button {
-  margin-right: 10px;
 }
 .rooms-table, .reservations-table {
   width: 100%;

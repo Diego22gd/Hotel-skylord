@@ -11,7 +11,7 @@
               <li><router-link to="/">Inicio</router-link></li>
               <li><router-link to="/nosotros">Nosotros</router-link></li>
               <li><router-link to="/reservas">Reservas</router-link></li>
-              <li><router-link to="/login">Iniciar Sesión</router-link></li>
+              
             </ul>
           </div>
         </nav>
@@ -29,6 +29,9 @@
   
   <style>
   /* Puedes mover el CSS del header aquí o mantenerlo en un archivo separado */
+  body{
+    margin: 0;
+  }
   .header {
     background-color: #333;
     color: white;
