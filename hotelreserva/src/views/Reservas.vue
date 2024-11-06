@@ -123,44 +123,57 @@ export default {
   padding: 20px;
   max-width: 800px;
   margin: 0 auto;
+  font-family: 'Roboto', sans-serif;
+  color: #333;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #555;
 }
 
-input {
+input, textarea {
   width: 100%;
-  padding: 8px;
+  padding: 12px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 8px;
+  transition: border-color 0.3s ease;
+  font-size: 1em;
+}
+
+input:focus, textarea:focus {
+  border-color: #d4a017; /* Dorado suave */
+  outline: none;
 }
 
 button {
-  padding: 10px 15px;
-  background-color: #007bff;
+  padding: 12px 18px;
+  background-color: #d4a017;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
+  font-size: 1.1em;
+  transition: background-color 0.3s ease;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #b38c0a; /* Dorado más oscuro */
 }
 
 .titulo {
   position: relative;
-  height: 50vh;
+  height: 60vh;
   background-image: url('@/assets/hotel.webp');
   background-position: center center;
   background-size: cover;
-  color: rgb(247, 247, 247);
+  color: #f7f7f7;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -169,9 +182,11 @@ button:hover {
 
 .nos {
   font-size: 4em;
-  font-weight: bold;
+  font-weight: 700;
+  font-family: 'Playfair Display', serif; /* Fuente elegante */
   font-style: italic;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+  text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.5);
+  color: #fff;
 }
 
 .modal {
@@ -183,15 +198,20 @@ button:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px); /* Agrega un desenfoque elegante */
+  transition: opacity 0.3s ease;
 }
 
 .modal-content {
   background-color: white;
-  padding: 20px;
-  border-radius: 5px;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   max-width: 500px;
   width: 100%;
+  position: relative;
+  font-family: 'Roboto', sans-serif;
 }
 
 .close {
@@ -199,5 +219,13 @@ button:hover {
   top: 10px;
   right: 10px;
   cursor: pointer;
+  font-size: 1.5em;
+  color: #333;
+}
+
+.close:hover {
+  color: #d4a017;
 }
 </style>
+
+

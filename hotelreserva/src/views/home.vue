@@ -25,7 +25,7 @@
             <div class="room-details">
               <h2>{{ room.name }}</h2>
               <p>{{ room.description }}</p>
-              <button @click="reserveRoom(room)">Reservar</button>
+              
             </div>
           </div>
         </div>
@@ -168,9 +168,11 @@ export default {
 
 
 <style scoped>
-
+template{
+  font-family: 'Roboto', sans-serif;
+}
 .home {
-  font-family: Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   
 }
 
@@ -258,8 +260,15 @@ export default {
   padding: 40px 20px;
   text-align: center;
   background: #051c2d;
-  color: #fff;
+  color: #000000;
   height: 20rem;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin: 20px;
+  font-family: 'Roboto', sans-serif;
 }
 
 .info h2 {
@@ -283,13 +292,15 @@ export default {
   display: flex; /* Coloca la imagen y el contenido en línea */
   align-items: center;
   justify-content: center;
+  font-family: 'Roboto', sans-serif;
 
 }
 
 .room-image {
-  width: 500px;  /* Ajusta el tamaño de la imagen */
+  width: 350px;  /* Ajusta el tamaño de la imagen */
   height: auto;
-  margin-right: 20px; /* Espacio entre la imagen y la descripción */
+  margin-right: 20px; 
+  margin-left: 10px;/* Espacio entre la imagen y la descripción */
 }
 
 .room-details {
@@ -297,7 +308,7 @@ export default {
 }
 
 .room h2 {
-  font-size: 24px;
+  font-size: 20px;
   margin-bottom: 10px;
   text-align: center;
 }
@@ -355,6 +366,8 @@ export default {
   width: 100%; /* El contenedor mostrará tres imágenes */
   overflow: hidden;
   height: 50%;
+  background-color: #ffffff;
+  
  
 }
 .galeria{
@@ -362,6 +375,8 @@ export default {
     margin-top: -8px;
     padding-top: 1rem;
     padding-bottom: 1rem;
+    background-color: #ffffff;
+  
 }
 .gallery-wrapper {
   display: flex;
@@ -410,7 +425,7 @@ export default {
     justify-content: center;
     padding-bottom: 4rem;
     background: #dfe5e9;
-
+    font-family: 'Roboto', sans-serif;
     
 }
 .informacion{
@@ -418,13 +433,19 @@ export default {
     background: #dfe5e9;
     text-align: center;
     padding-top: 1rem;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin: 20px;
+  font-family: 'Roboto', sans-serif;
    
 }
 .lista{
     font-size: 1.5rem;
 }
 .tdirection{
-   font-size: 30px;
+   font-size: 25px;
 }
 .nav-links li {
   cursor: default;  /* Esto desactiva el puntero del ratón para los enlaces */
