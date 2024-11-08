@@ -6,11 +6,11 @@
     <form @submit.prevent="checkAvailability">
       <div class="form-group">
         <label for="checkIn">Fecha de Entrada:</label>
-        <input type="date" id="checkIn" v-model="checkInDate" required />
+        <input type="date" id="checkIn" v-model="reservationData.check_in_date" required />
       </div>
       <div class="form-group">
         <label for="checkOut">Fecha de Salida:</label>
-        <input type="date" id="checkOut" v-model="checkOutDate" required />
+        <input type="date" id="checkOut" v-model="reservationData.check_out_date" required />
       </div>
       <button type="submit">Buscar Habitaciones Disponibles</button>
     </form>
@@ -40,19 +40,19 @@
         
         <div class="form-group">
           <label for="clientName">Nombre del Cliente:</label>
-          <input type="text" id="clientName" v-model="newReservation.clientName" required />
+          <input type="text" id="clientName" v-model="newReservation.client_name" required />
         </div>
         <div class="form-group">
           <label for="clientEmail">Correo Electrónico:</label>
-          <input type="email" id="clientEmail" v-model="newReservation.clientEmail" required />
+          <input type="email" id="clientEmail" v-model="newReservation.client_email" required />
         </div>
         <div class="form-group">
           <label for="clientPhone">Número de Teléfono:</label>
-          <input type="text" id="clientPhone" v-model="newReservation.clientPhone" required />
+          <input type="text" id="clientPhone" v-model="newReservation.client_phone" required />
         </div>
         <div class="form-group">
           <label for="additionalNotes">Notas Adicionales:</label>
-          <textarea id="additionalNotes" v-model="newReservation.additionalNotes"></textarea>
+          <textarea id="additionalNotes" v-model="newReservation.additional_notes"></textarea>
         </div>
         <button type="submit">Confirmar Reserva</button>
       </form>
@@ -68,14 +68,20 @@ import roomImage3 from '@/assets/deluxe.jpg';
 export default {
   data() {
     return {
-    reservationData: {
-        client_name: '',  // Nombre del cliente
-        client_email: '', // Email del cliente
-        client_phone: '', // Teléfono del cliente
-        room_type: '',    // Tipo de habitación
-        check_in_date: '', // Fecha de check-in
-        check_out_date: '', // Fecha de check-out
-        additional_notes: '', // Notas adicionales
+      reservationData: {
+        check_in_date: '',  // Fecha de check-in
+        check_out_date: ''  // Fecha de check-out
+      },
+      availableRooms: [],  // Inicializamos availableRooms
+      searchPerformed: false,
+      isReservationModalOpen: false,
+      selectedRoom: null,
+      newReservation: {
+        client_name: '',
+        client_email: '',
+        client_phone: '',
+        additional_notes: '',
+        room_type: ''
       },
       rooms: [
         {
@@ -98,47 +104,52 @@ export default {
   },
   methods: {
     checkAvailability() {
-      this.availableRooms = this.rooms; // Muestra todas las habitaciones como disponibles
+      // Se realiza la simulación de que todas las habitaciones están disponibles
+      this.availableRooms = this.rooms;
       this.searchPerformed = true;
     },
     openReservationModal(room) {
       this.selectedRoom = room;
       this.isReservationModalOpen = true;
+      // Establece los detalles de la habitación en newReservation
+      this.newReservation.room_type = room.name;
+      this.newReservation.check_in_date = this.reservationData.check_in_date;
+      this.newReservation.check_out_date = this.reservationData.check_out_date;
     },
     closeReservationModal() {
       this.isReservationModalOpen = false;
       this.selectedRoom = null;
     },
     async confirmReservation() {
-  try {
-    const response = await fetch('http://127.0.0.1:8000/api/reservas/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(this.newReservation), // Cambiado a `this.newReservation`
-    });
+      try {
+        const response = await fetch('http://127.0.0.1:8000/api/reservas/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(this.newReservation),
+        });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Error en la solicitud:', errorText);
-      alert('Error al confirmar la reserva');
-      return;
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Error en la solicitud:', errorText);
+          alert('Error al confirmar la reserva');
+          return;
+        }
+
+        const data = await response.json();
+        console.log('Reserva confirmada:', data);
+        alert('Reserva confirmada con éxito');
+        this.closeReservationModal();
+      } catch (error) {
+        console.error('Error de red:', error);
+        alert('Error al confirmar la reserva');
+      }
     }
-
-    const data = await response.json();
-    console.log('Reserva confirmada:', data);
-    alert('Reserva confirmada con éxito');
-    this.closeReservationModal(); // Cierra el modal después de confirmar la reserva
-  } catch (error) {
-    console.error('Error de red:', error);
-    alert('Error al confirmar la reserva');
-  }
-}
-
   }
 };
 </script>
+
 
 <style scoped>
 .reservas {
