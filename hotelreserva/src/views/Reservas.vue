@@ -21,6 +21,7 @@
         <li v-for="(room, index) in availableRooms" :key="index">
           <h3>{{ room.name }}</h3>
           <p>{{ room.description }}</p>
+          <img :src="room.image" alt="Imagen de la habitación" class="room-image" />
           <button @click="openReservationModal(room)">Reservar</button>
         </li>
       </ul>
@@ -36,6 +37,7 @@
       <span class="close" @click="closeReservationModal">&times;</span>
       <h2>Realizar Reserva</h2>
       <form @submit.prevent="confirmReservation">
+        
         <div class="form-group">
           <label for="clientName">Nombre del Cliente:</label>
           <input type="text" id="clientName" v-model="newReservation.clientName" required />
@@ -66,17 +68,14 @@ import roomImage3 from '@/assets/deluxe.jpg';
 export default {
   data() {
     return {
-      checkInDate: '',
-      checkOutDate: '',
-      availableRooms: [],
-      searchPerformed: false,
-      isReservationModalOpen: false,
-      selectedRoom: null,
-      newReservation: {
-        clientName: '',
-        clientEmail: '',
-        clientPhone: '',
-        additionalNotes: ''
+    reservationData: {
+        client_name: '',  // Nombre del cliente
+        client_email: '', // Email del cliente
+        client_phone: '', // Teléfono del cliente
+        room_type: '',    // Tipo de habitación
+        check_in_date: '', // Fecha de check-in
+        check_out_date: '', // Fecha de check-out
+        additional_notes: '', // Notas adicionales
       },
       rooms: [
         {
@@ -99,8 +98,8 @@ export default {
   },
   methods: {
     checkAvailability() {
+      this.availableRooms = this.rooms; // Muestra todas las habitaciones como disponibles
       this.searchPerformed = true;
-      this.availableRooms = this.rooms; // Asumimos que todas las habitaciones están disponibles
     },
     openReservationModal(room) {
       this.selectedRoom = room;
@@ -110,10 +109,33 @@ export default {
       this.isReservationModalOpen = false;
       this.selectedRoom = null;
     },
-    confirmReservation() {
-      alert(`Reserva confirmada para ${this.selectedRoom.name} por ${this.newReservation.clientName}.`);
-      this.closeReservationModal();
+    async confirmReservation() {
+  try {
+    const response = await fetch('http://127.0.0.1:8000/api/reservas/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(this.newReservation), // Cambiado a `this.newReservation`
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Error en la solicitud:', errorText);
+      alert('Error al confirmar la reserva');
+      return;
     }
+
+    const data = await response.json();
+    console.log('Reserva confirmada:', data);
+    alert('Reserva confirmada con éxito');
+    this.closeReservationModal(); // Cierra el modal después de confirmar la reserva
+  } catch (error) {
+    console.error('Error de red:', error);
+    alert('Error al confirmar la reserva');
+  }
+}
+
   }
 };
 </script>
@@ -227,5 +249,3 @@ button:hover {
   color: #d4a017;
 }
 </style>
-
-

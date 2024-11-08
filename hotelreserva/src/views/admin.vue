@@ -1,11 +1,9 @@
-elreserva\src\views\admin.vue
-@@ -1,217 +1,82 @@
 <template>
   <div class="admin-view">
     <header class="admin-header">
       <h2>Administradores</h2>
-      <button @click="bhabitaciones">Habitaciones</button>
-      <button @click="breservas">Reservas</button>
+      <button @click="bhHabitaciones">Habitaciones</button>
+      <button @click="bhReservas">Reservas</button>
       <button @click="logout">Cerrar sesión</button>
     </header>
 
@@ -39,20 +37,20 @@ elreserva\src\views\admin.vue
       <table class="reservations-table">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Cliente</th>
-            <th>Fecha de Entrada</th>
-            <th>Fecha de Salida</th>
+            <th>Nombre del Cliente</th>
+            <th>Correo</th>
+            <th>Teléfono</th>
+            <th>Notas</th>
             <th>Estado</th>
             <th>Acción</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="reservation in reservations" :key="reservation.id">
-            <td>{{ reservation.id }}</td>
-            <td>{{ reservation.client }}</td>
-            <td>{{ reservation.checkInDate }}</td>
-            <td>{{ reservation.checkOutDate }}</td>
+            <td>{{ reservation.clientName }}</td>
+            <td>{{ reservation.clientEmail }}</td>
+            <td>{{ reservation.clientPhone }}</td>
+            <td>{{ reservation.additionalNotes }}</td>
             <td>{{ reservation.status }}</td>
             <td>
               <button @click="openEditModal(reservation)">Editar</button>
@@ -67,7 +65,7 @@ elreserva\src\views\admin.vue
     <div v-if="showEditModal" class="modal">
       <div class="modal-content">
         <h3>Editar Estado de Reserva</h3>
-        <p>Selecciona un nuevo estado para la reserva de {{ currentReservation.client }}</p>
+        <p>Selecciona un nuevo estado para la reserva de {{ currentReservation.clientName }}</p>
         
         <select v-model="selectedStatus">
           <option value="Confirmada">Confirmada</option>
@@ -81,25 +79,6 @@ elreserva\src\views\admin.vue
         </div>
       </div>
     </div>
-    
-    <!-- Modal de edición de habitación -->
-    <div v-if="showRoomEditModal" class="modal">
-      <div class="modal-content">
-        <h3>Editar Estado de Habitación</h3>
-        <p>Selecciona un nuevo estado para la habitación {{ currentRoom.id }}</p>
-        
-        <select v-model="currentRoom.status">
-          <option value="Disponible">Disponible</option>
-          <option value="Ocupada">Ocupada</option>
-          <option value="En Mantenimiento">En Mantenimiento</option>
-        </select>
-
-        <div class="modal-actions">
-          <button @click="saveRoomStatus">Guardar</button>
-          <button @click="closeRoomEditModal">Cancelar</button>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -107,76 +86,89 @@ elreserva\src\views\admin.vue
 export default {
   data() {
     return {
-      activeSection: 'habitaciones', // Valor inicial para mostrar la tabla de habitaciones
-      rooms: [
-        { id: 1, status: 'Disponible' },
-        { id: 2, status: 'Ocupada' },
-        { id: 3, status: 'En Mantenimiento' },
-      ],
-      reservations: [
-        {
-          id: 1,
-          client: 'Juan Pérez',
-          checkInDate: '2024-11-10',
-          checkOutDate: '2024-11-15',
-          status: 'Confirmada',
-        },
-        {
-          id: 2,
-          client: 'Maria González',
-          checkInDate: '2024-11-12',
-          checkOutDate: '2024-11-20',
-          status: 'Pendiente',
-        },
-      ],
+      activeSection: 'habitaciones',
+      rooms: [], // Arreglo para almacenar habitaciones
+      reservations: [], // Arreglo para almacenar reservas
       showEditModal: false,
       currentReservation: null,
       selectedStatus: '',
-      showRoomEditModal: false,
-      currentRoom: null,
     };
   },
   methods: {
-    bhabitaciones() {
+    async createReservation(newReservation) {
+      try {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value; // Obtén el token CSRF de tu HTML, si usas sesiones
+
+        const response = await fetch('http://127.0.0.1:8000/api/reservas/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken, // Token CSRF
+            'Authorization': `Bearer ${localStorage.getItem('token')}`, // Token de autenticación (si aplica)
+          },
+          body: JSON.stringify(newReservation),
+        });
+        
+        if (response.ok) {
+          alert("Reserva creada exitosamente");
+          this.fetchReservas(); // Actualiza la lista de reservas
+        } else {
+          const errorData = await response.json();
+          console.error("Error en la creación de la reserva:", errorData);
+        }
+      } catch (error) {
+        console.error('Error al crear la reserva:', error);
+      }
+    },
+    async fetchReservas() {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/api/reservas/');
+        if (response.ok) {
+          this.reservations = await response.json();
+        } else {
+          console.error("Error al cargar las reservas");
+        }
+      } catch (error) {
+        console.error('Error al cargar reservas:', error);
+      }
+    },
+    bhHabitaciones() {
       this.activeSection = 'habitaciones';
     },
-    breservas() {
+    bhReservas() {
       this.activeSection = 'reservas';
     },
     logout() {
       localStorage.removeItem('isAuthenticated');
       this.$router.push({ name: 'Login' });
     },
-    editRoom(room) {
-      this.currentRoom = { ...room }; // Copia el objeto de la habitación
-      this.showRoomEditModal = true;
-    },
-    saveRoomStatus() {
-      const roomIndex = this.rooms.findIndex(r => r.id === this.currentRoom.id);
-      if (roomIndex !== -1) {
-        this.rooms[roomIndex].status = this.currentRoom.status;
-      }
-      this.closeRoomEditModal();
-    },
-    closeRoomEditModal() {
-      this.showRoomEditModal = false;
-      this.currentRoom = null;
-    },
-    deleteRoom(id) {
-      if (confirm(`¿Estás seguro de que deseas eliminar la habitación ${id}?`)) {
-        this.rooms = this.rooms.filter(room => room.id !== id);
-        alert(`Habitación ${id} eliminada exitosamente.`);
-      }
-    },
     openEditModal(reservation) {
       this.currentReservation = reservation;
       this.selectedStatus = reservation.status;
       this.showEditModal = true;
     },
-    saveStatus() {
+    async saveStatus() {
       if (this.currentReservation) {
-        this.currentReservation.status = this.selectedStatus;
-        this.closeEditModal();
+        try {
+          const response = await fetch(`http://127.0.0.1:8000/api/reservas/${this.currentReservation.id}/`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status: this.selectedStatus }),
+          });
+
+          if (response.ok) {
+            this.currentReservation.status = this.selectedStatus;
+            this.fetchReservas(); // Actualizar lista
+            alert("Reserva actualizada con éxito");
+            this.closeEditModal();
+          } else {
+            console.error("Error al actualizar la reserva");
+          }
+        } catch (error) {
+          console.error('Error al guardar el estado:', error);
+        }
       }
     },
     closeEditModal() {
@@ -184,15 +176,35 @@ export default {
       this.currentReservation = null;
       this.selectedStatus = '';
     },
-    deleteReservation(id) {
+    async deleteReservation(id) {
       if (confirm(`¿Estás seguro de que deseas eliminar la reserva ${id}?`)) {
-        this.reservations = this.reservations.filter((res) => res.id !== id);
-        alert(`Reserva ${id} eliminada exitosamente.`);
+        try {
+          const response = await fetch(`http://127.0.0.1:8000/api/reservas/${id}/`, {
+            method: 'DELETE',
+          });
+
+          if (response.ok) {
+            this.reservations = this.reservations.filter((res) => res.id !== id);
+            alert(`Reserva ${id} eliminada exitosamente.`);
+          } else {
+            console.error("Error al eliminar la reserva");
+          }
+        } catch (error) {
+          console.error('Error al eliminar la reserva:', error);
+        }
       }
     },
   },
+  mounted() {
+    this.fetchReservas();
+  }
 };
 </script>
+
+<style scoped>
+/* Aquí va el estilo, basado en tu código original */
+</style>
+
 
 <style scoped>
 
