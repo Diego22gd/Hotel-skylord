@@ -128,7 +128,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'hotel_db',
+        'NAME': 'hotel_reserva',
         'USER': 'root',           # Cambia esto si tienes otro usuario
         'PASSWORD': '6e7137d6', # Cambia esto por tu contraseña
         'HOST': 'localhost',

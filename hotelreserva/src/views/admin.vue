@@ -32,34 +32,39 @@
     </section>
 
     <!-- Tabla de Reservas -->
-    <section v-if="activeSection === 'reservas'" class="reservations-section">
-      <h3>Reservas</h3>
-      <table class="reservations-table">
-        <thead>
-          <tr>
-            <th>Nombre del Cliente</th>
-            <th>Correo</th>
-            <th>Teléfono</th>
-            <th>Notas</th>
-            <th>Estado</th>
-            <th>Acción</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="reservation in reservations" :key="reservation.id">
-            <td>{{ reservation.clientName }}</td>
-            <td>{{ reservation.clientEmail }}</td>
-            <td>{{ reservation.clientPhone }}</td>
-            <td>{{ reservation.additionalNotes }}</td>
-            <td>{{ reservation.status }}</td>
-            <td>
-              <button @click="openEditModal(reservation)">Editar</button>
-              <button @click="deleteReservation(reservation.id)">Borrar</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+<section v-if="activeSection === 'reservas'" class="reservations-section">
+  <h3>Reservas</h3>
+  <table class="reservations-table">
+    <thead>
+      <tr>
+        <th>Nombre del Cliente</th>
+        <th>Correo</th>
+        <th>Teléfono</th>
+        <th>Check-In</th>
+        <th>Check-Out</th>
+        <th>Notas</th>
+        <th>Estado</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="reservation in reservations" :key="reservation.id">
+        <td>{{ reservation.client_name }}</td>
+        <td>{{ reservation.client_email }}</td>
+        <td>{{ reservation.client_phone }}</td>
+        <td>{{ reservation.check_in_date }}</td>
+        <td>{{ reservation.check_out_date }}</td>
+        <td>{{ reservation.additional_notes }}</td>
+        <td>{{ reservation.status }}</td>
+        <td>
+          <button @click="openEditModal(reservation)">Editar</button>
+          <button @click="deleteReservation(reservation.id)">Borrar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
 
     <!-- Modal de edición de reserva -->
     <div v-if="showEditModal" class="modal">
@@ -249,7 +254,7 @@ export default {
 
 .rooms-table th, .reservations-table th {
   padding: 12px;
-  background-color: #f4f6f8;
+  background-color: rgb(13, 34, 54);
   color: #050404;
   font-weight: bold;
   text-align: left;

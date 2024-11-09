@@ -70,7 +70,14 @@ export default {
     return {
       reservationData: {
         check_in_date: '',  // Fecha de check-in
-        check_out_date: ''  // Fecha de check-out
+        check_out_date: '',
+        client_name: '',
+        client_email: '',
+        client_phone: '',
+        additional_notes: '',
+        room_type: ''
+         // Fecha de check-out
+         // Fecha de check-out
       },
       availableRooms: [],  // Inicializamos availableRooms
       searchPerformed: false,
