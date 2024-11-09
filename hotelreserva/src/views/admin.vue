@@ -8,17 +8,13 @@
     </header>
 
     <!-- Tabla de Habitaciones -->
-     <section v-if="activeSection === 'habitaciones'" class="rooms-section">
+    <section v-if="activeSection === 'habitaciones'" class="rooms-section">
       <h3>Habitaciones</h3>
-      <button @click="openAddRoomModal">Agregar Habitación</button>
       <table class="rooms-table">
         <thead>
           <tr>
             <th>ID</th>
             <th>Estado</th>
-            <th>Tipo</th>
-            <th>Precio</th>
-            <th>Capacidad</th>
             <th>Acción</th>
           </tr>
         </thead>
@@ -26,9 +22,6 @@
           <tr v-for="room in rooms" :key="room.id">
             <td>{{ room.id }}</td>
             <td>{{ room.status }}</td>
-            <td>{{ room.tipo }}</td>
-            <td>{{ room.precio }}</td>
-            <td>{{ room.capacidad }}</td>
             <td>
               <button @click="editRoom(room)">Editar</button>
               <button @click="deleteRoom(room.id)">Borrar</button>
@@ -37,28 +30,7 @@
         </tbody>
       </table>
     </section>
-    <div v-if="showAddRoomModal" class="modal">
-      <div class="modal-content">
-        <h3>Agregar Nueva Habitación</h3>
-        <label>Estado:</label>
-        <input v-model="newRoom.status" type="text" placeholder="Estado de la habitación" />
-        
-        <label>Tipo:</label>
-        <input v-model="newRoom.tipo" type="text" placeholder="Tipo de habitación" />
-        
-        <label>Precio:</label>
-        <input v-model="newRoom.precio" type="number" placeholder="Precio de la habitación" />
-        
-        <label>Capacidad:</label>
-        <input v-model="newRoom.capacidad" type="number" placeholder="Capacidad de personas" />
 
-        <div class="modal-actions">
-          <button @click="saveRoom">Guardar</button>
-          <button @click="closeAddRoomModal">Cancelar</button>
-        </div>
-      </div>
-    </div>
- 
     <!-- Tabla de Reservas -->
 <section v-if="activeSection === 'reservas'" class="reservations-section">
   <h3>Reservas</h3>
@@ -112,7 +84,7 @@
         </div>
       </div>
     </div>
- </div>
+  </div>
 </template>
 
 <script>
@@ -123,77 +95,11 @@ export default {
       rooms: [], // Arreglo para almacenar habitaciones
       reservations: [], // Arreglo para almacenar reservas
       showEditModal: false,
-      showAddRoomModal: false,
       currentReservation: null,
       selectedStatus: '',
-      newRoom: {
-        status: '',
-        tipo: '',
-        precio: '',
-        capacidad: ''
-      },
     };
   },
   methods: {
-    async fetchRooms() {
-      try {
-        const response = await fetch('http://127.0.0.1:8000/api/habitaciones/');
-        if (response.ok) {
-          this.rooms = await response.json();
-        } else {
-          console.error("Error al cargar las habitaciones");
-        }
-      } catch (error) {
-        console.error('Error al cargar habitaciones:', error);
-      }
-    },
-    openAddRoomModal() {
-      this.showAddRoomModal = true;
-    },
-    closeAddRoomModal() {
-      this.showAddRoomModal = false;
-      this.newRoom = { status: '', tipo: '', precio: '', capacidad: '' };
-    },
-    async saveRoom() {
-      try {
-        const response = await fetch('http://127.0.0.1:8000/api/habitaciones/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(this.newRoom),
-        });
-
-        if (response.ok) {
-          alert("Habitación creada exitosamente");
-          this.closeAddRoomModal();
-          this.fetchRooms(); // Actualiza la lista de habitaciones
-        } else {
-          const errorData = await response.json();
-          console.error("Error en la creación de la habitación:", errorData);
-        }
-      } catch (error) {
-        console.error('Error al crear la habitación:', error);
-      }
-    },
-    async deleteRoom(id) {
-      if (confirm(`¿Estás seguro de que deseas eliminar la habitación ${id}?`)) {
-        try {
-          const response = await fetch(`http://127.0.0.1:8000/api/habitaciones/${id}/`, {
-            method: 'DELETE',
-          });
-
-          if (response.ok) {
-            this.rooms = this.rooms.filter((room) => room.id !== id);
-            alert(`Habitación ${id} eliminada exitosamente.`);
-          } else {
-            console.error("Error al eliminar la habitación");
-          }
-        } catch (error) {
-          console.error('Error al eliminar la habitación:', error);
-        }
-      }
-    },
     async createReservation(newReservation) {
       try {
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value; // Obtén el token CSRF de tu HTML, si usas sesiones
