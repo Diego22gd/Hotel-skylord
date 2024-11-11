@@ -212,71 +212,92 @@ export default {
 
 
 <style scoped>
-
-
+/* Estilo general para el sitio */
 .admin-view {
   padding: 20px;
-  font-family: Arial, sans-serif;
+  font-family: 'Roboto', sans-serif; /* Fuente profesional y moderna */
+  background-color: #f5f7fa; /* Fondo claro para un aspecto limpio */
 }
 
+/* Estilos para el encabezado */
 .admin-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+  padding: 15px;
+  background-color: #2c3e50; /* Fondo oscuro para transmitir elegancia */
+  color: #ecf0f1;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .admin-header h2 {
-  font-size: 24px;
-  color: #333;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #ffffff;
 }
 
 .admin-header button {
-  background-color: #333;
-  color: #fff;
+  background-color: #2c3e50; ; /* Azul para contraste con el fondo oscuro */
+  color: #ffffff;
   border: none;
   padding: 8px 16px;
+  font-size: 1.5rem;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-left: 5px;
 }
 
 .admin-header button:hover {
-  background-color: #333;
+  background-color: #2980b9; /* Azul más oscuro al pasar el cursor */
+}
+
+/* Estilos de tablas */
+.rooms-section, .reservations-section {
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.rooms-section h3, .reservations-section h3 {
+  color: #2c3e50;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 15px;
 }
 
 .rooms-table, .reservations-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
 }
 
 .rooms-table th, .reservations-table th {
   padding: 12px;
-  background-color: rgb(13, 34, 54);
-  color: #050404;
-  font-weight: bold;
+  background-color: #34495e; /* Fondo oscuro en encabezado de tabla */
+  color: #ffffff;
   text-align: left;
+  font-weight: bold;
+  border-bottom: 3px solid #2c3e50;
 }
 
 .rooms-table td, .reservations-table td {
   padding: 12px;
   border-bottom: 1px solid #ddd;
+  color: #333333;
 }
 
 .rooms-table tr:hover, .reservations-table tr:hover {
-  background-color: #aae2e2;
-}
-
-.rooms-table th, .reservations-table th, 
-.rooms-table td, .reservations-table td {
-  border:#110e0e;
+  background-color: #eaf1f8; /* Efecto hover para filas */
 }
 
 button {
-  background-color: #13441f;
-  color: #fff;
+  background-color: #27ae60; /* Botón verde para acciones */
+  color: #ffffff;
   border: none;
   padding: 8px 12px;
   border-radius: 5px;
@@ -286,7 +307,7 @@ button {
 }
 
 button:hover {
-  background-color: #218838;
+  background-color: #2ecc71;
 }
 
 button:disabled {
@@ -294,29 +315,32 @@ button:disabled {
   cursor: not-allowed;
 }
 
+/* Estilo para el modal */
 .modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6); /* Fondo semi-transparente */
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1000;
 }
 
 .modal-content {
-  background-color: #fff;
+  background-color: #ffffff;
   padding: 20px;
   border-radius: 8px;
-  width: 350px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
   text-align: center;
 }
 
 .modal-content h3 {
-  font-size: 18px;
+  font-size: 1.5rem;
   margin-bottom: 15px;
   color: #333;
 }
@@ -328,24 +352,64 @@ button:disabled {
 }
 
 .modal-actions button {
-  margin-left: 10px;
   padding: 8px 12px;
   border-radius: 5px;
 }
 
 .modal-actions button:first-child {
-  background-color: #072647;
+  background-color: #3498db; /* Botón de guardar en azul */
+  color: #ffffff;
 }
 
 .modal-actions button:first-child:hover {
-  background-color: #072647;
+  background-color: #2980b9;
 }
 
 .modal-actions button:last-child {
-  background-color: #5e1b22;
+  background-color: #e74c3c; /* Botón de cancelar en rojo */
+  color: #ffffff;
 }
 
 .modal-actions button:last-child:hover {
-  background-color: #5a181e;
+  background-color: #c0392b;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .admin-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .admin-header button {
+    font-size: 0.9rem;
+    padding: 6px 12px;
+  }
+
+  .rooms-table th, .reservations-table th,
+  .rooms-table td, .reservations-table td {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+
+  .modal-content {
+    width: 100%;
+    max-width: 350px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .admin-header button {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+  }
+
+  .rooms-table th, .reservations-table th,
+  .rooms-table td, .reservations-table td {
+    font-size: 0.8rem;
+  }
 }
 </style>
