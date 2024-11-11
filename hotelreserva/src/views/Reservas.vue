@@ -266,4 +266,43 @@ button:hover {
 .close:hover {
   color: #d4a017;
 }
+@media (max-width: 768px) {
+  .titulo h1 {
+    font-size: 2em;
+  }
+
+  .reservas {
+    width: 90%;
+    padding: 15px;
+  }
+
+  .room-item {
+    flex-direction: column;
+  }
+
+  .modal-content {
+    width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .titulo h1 {
+    font-size: 1.8em;
+  }
+
+  .room-item {
+    width: 100%;
+  }
+
+  .modal-content {
+    width: 100%;
+    padding: 15px;
+  }
+
+  input, textarea, button {
+    font-size: 0.9em;
+    padding: 10px;
+  }
+}
+
 </style>
