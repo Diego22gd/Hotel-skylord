@@ -424,26 +424,11 @@ template{
     gap: 3.5rem;
     justify-content: center;
     padding-bottom: 4rem;
-    background: #dfe5e9;
+    background: #ffffff;
     font-family: 'Roboto', sans-serif;
     
 }
-.informacion{
-     align-items: center;
-    background: #dfe5e9;
-    text-align: center;
-    padding-top: 1rem;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  margin: 20px;
-  font-family: 'Roboto', sans-serif;
-   
-}
-.lista{
-    font-size: 1.5rem;
-}
+
 .tdirection{
    font-size: 25px;
 }
@@ -455,7 +440,28 @@ template{
 .nav-links li {
   list-style: none;  /* Remueve el punto de lista */
 }
+.informacion {
+  background: #f8f9fa;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
 
+.contacto, .direccion {
+  max-width: 600px;
+  text-align: center;
+}
+
+.lista { font-size: 1.1rem; }
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .hero-title { font-size: 2.5rem; }
+  .room-content { flex-direction: column; text-align: center; }
+  .room-image { width: 100%; }
+}
 
 
 
