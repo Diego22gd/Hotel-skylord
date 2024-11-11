@@ -45,96 +45,114 @@ export default {
   
 };
 </script>
-
 <style scoped>
+/* Estilo para el contenedor principal */
 .login {
   padding: 20px;
   max-width: 400px;
   margin: 0 auto;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* Estilos para el título */
+.titulo {
+  position: relative;
+  height: 50vh;
+  background-image: url('@/assets/hotel.webp'); /* Imagen de fondo */
+  background-position: center center;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgb(247, 247, 247);
+}
+
+.nos {
+  font-size: 3em;
+  font-weight: bold;
+  font-style: italic;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+  text-align: center;
+}
+
+/* Estilo para cada grupo del formulario */
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 label {
   display: block;
   margin-bottom: 5px;
+  color: #333;
+  font-weight: 500;
 }
 
 input {
   width: 100%;
-  padding: 8px;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  font-size: 1em;
+  box-sizing: border-box;
 }
 
+/* Botón de enviar */
 button {
-  padding: 10px 15px;
+  width: 100%;
+  padding: 12px;
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 4px;
+  font-size: 1em;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 button:hover {
   background-color: #0056b3;
 }
 
-.links {
+/* Mensaje de error */
+.error-message {
+  color: #ff4d4d;
+  font-size: 0.9em;
   margin-top: 10px;
-}
-
-.modal {
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 5px;
-  width: 300px;
-}
-
-.close {
-  cursor: pointer;
-  float: right;
-}
-.titulo{
-  
-  position: relative;
-  height: 50vh;
-  background-image: url('@/assets/hotel.webp'); /* Aquí va la imagen del hotel */
-  background-position: center center;
-  background-size: cover;
-  color: rgb(247, 247, 247);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.titulo {
   text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  
 }
 
-.nos {
-  font-size: 4em;
-  font-weight: bold;
-  font-style: italic;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+/* Responsividad */
+@media (max-width: 768px) {
+  .nos {
+    font-size: 2.5em;
+  }
+
+  .login {
+    width: 90%;
+    padding: 15px;
+  }
+
+  button {
+    padding: 10px;
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 480px) {
+  .nos {
+    font-size: 2em;
+  }
+
+  .login {
+    width: 100%;
+    padding: 10px;
+  }
+
+  input, button {
+    font-size: 0.85em;
+  }
 }
 </style>
 
