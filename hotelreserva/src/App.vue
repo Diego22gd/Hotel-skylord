@@ -11,6 +11,7 @@
               <li><router-link to="/">Inicio</router-link></li>
               <li><router-link to="/nosotros">Nosotros</router-link></li>
               <li><router-link to="/reservas">Reservas</router-link></li>
+              <li><router-link to="/login">Iniciar Sesión</router-link></li>
               
             </ul>
           </div>

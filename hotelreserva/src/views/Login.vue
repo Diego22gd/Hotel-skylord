@@ -4,6 +4,7 @@
   </div>
   <div class="login">
     
+    
     <form @submit.prevent="login">
       <div class="form-group">
         <label for="email">Correo Electrónico:</label>
@@ -15,7 +16,47 @@
       </div>
       <button type="submit">Ingresar</button>
     </form>
-  </div>
+    <a @click.prevent="openRegisterModal">Registrarse</a>
+    </div>
+
+   <!-- Modal para Registrarse -->
+   <div v-if="showRegisterModal" class="modal">
+      <div class="modal-content">
+        <span class="close" @click="closeRegisterModal">&times;</span>
+        <h2>Registrarse</h2>
+        <form @submit.prevent="handleRegister">
+          <div class="form-group">
+            <label for="firstName">Nombre:</label>
+            <input type="text" id="firstName" v-model="firstName" required />
+          </div>
+          <div class="form-group">
+            <label for="lastName">Apellido:</label>
+            <input type="text" id="lastName" v-model="lastName" required />
+          </div>
+          <div class="form-group">
+            <label for="registerEmail">Correo Electrónico:</label>
+            <input type="email" id="registerEmail" v-model="registerEmail" required />
+          </div>
+          <div class="form-group">
+            <label for="registerPassword">Contraseña:</label>
+            <input type="password" id="registerPassword" v-model="registerPassword" required />
+          </div>
+          <div class="form-group">
+            <label for="phoneNumber">Número de Teléfono:</label>
+            <input type="text" id="phoneNumber" v-model="phoneNumber" required />
+          </div>
+          <div class="form-group">
+            <label for="age">Edad:</label>
+            <input type="number" id="age" v-model="age" min="1" required />
+          </div>
+          <div class="form-group">
+            <label for="idNumber">Cédula:</label>
+            <input type="text" id="idNumber" v-model="idNumber" required />
+          </div>
+          <button type="submit">Registrarse</button>
+        </form>
+      </div>
+    </div>
 </template>
 
 <script>
@@ -24,11 +65,42 @@ export default {
     return {
       username: '',
       password: '',
+      errorMessage: '',
+      showRegisterModal: false,
+      firstName: '',
+      lastName: '',
+      registerEmail: '',
+      registerPassword: '',
+      phoneNumber: '',
+      age: null,
+      idNumber: '',
       errorMessage: ''
     
     };
   },
   methods: {
+    openRegisterModal() {
+      this.showRegisterModal = true;
+    },
+    closeRegisterModal() {
+      this.showRegisterModal = false;
+      this.clearRegisterFields();
+    },
+    handleRegister() {
+      alert(`Registrando usuario: ${this.firstName} ${this.lastName}`);
+      // Aquí puedes agregar la lógica para el registro.
+      this.closeRegisterModal();
+    },
+    clearRegisterFields() {
+      this.firstName = '';
+      this.lastName = '';
+      this.registerEmail = '';
+      this.registerPassword = '';
+      this.phoneNumber = '';
+      this.age = null;
+      this.idNumber = '';
+    },
+
     login() {
       // Verifica las credenciales de inicio de sesión
       if (this.username === 'admin' && this.password === '123456') {
@@ -42,6 +114,8 @@ export default {
     }
   },
     
+
+  
   
 };
 </script>
@@ -113,6 +187,39 @@ button {
 
 button:hover {
   background-color: #0056b3;
+}
+.modal {
+  position: fixed; /* Fija el modal en la pantalla */
+  top: 50%; /* Centra verticalmente */
+  left: 50%; /* Centra horizontalmente */
+  transform: translate(-50%, -50%); /* Ajusta el centro */
+  width: 100%; /* Ajusta el ancho al 100% del viewport */
+  height: 100%; /* Ajusta la altura al 100% del viewport */
+  background: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+  display: flex; /* Usa flexbox para centrar contenido */
+  align-items: center; /* Centra verticalmente el contenido */
+  justify-content: center; /* Centra horizontalmente el contenido */
+  z-index: 1000; /* Asegura que esté sobre otros elementos */
+}
+
+.modal-content {
+  background: #fff; /* Fondo blanco para el contenido */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  width: 90%; /* Ancho adaptable */
+  max-width: 400px; /* Ancho máximo */
+  max-height: 90%; /* Altura máxima */
+  overflow-y: auto; /* Permite scroll si el contenido es demasiado grande */
+  position: relative; /* Necesario para posicionar el botón de cierre */
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1.5rem;
+  cursor: pointer;
 }
 
 /* Mensaje de error */

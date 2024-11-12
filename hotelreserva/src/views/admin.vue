@@ -4,18 +4,20 @@
       <h2>Administradores</h2>
       <button @click="bhHabitaciones">Habitaciones</button>
       <button @click="bhReservas">Reservas</button>
+      <button @click="bhUsuarios">Usuarios</button>
       <button @click="logout">Cerrar sesión</button>
     </header>
 
     <!-- Tabla de Habitaciones -->
     <section v-if="activeSection === 'habitaciones'" class="rooms-section">
       <h3>Habitaciones</h3>
+      <button @click="openAddRoomModal">Agregar Habitación</button>
       <table class="rooms-table">
         <thead>
           <tr>
             <th>ID</th>
             <th>Estado</th>
-            <th>Acción</th>
+            <th>tipo de habitacion</th>
           </tr>
         </thead>
         <tbody>
@@ -30,6 +32,27 @@
         </tbody>
       </table>
     </section>
+    <!-- Modal de Agregar Habitación -->
+    <div v-if="showAddRoomModal" class="modal">
+      <div class="modal-content">
+        <h3>Agregar Nueva Habitación</h3>
+        
+        <label for="roomType">Tipo de Habitación:</label>
+        <input type="text" v-model="newRoom.room_type" id="roomType" required />
+
+        <label for="roomStatus">Estado:</label>
+        <select v-model="newRoom.status" id="roomStatus">
+          <option value="Disponible">Disponible</option>
+          <option value="Ocupada">Ocupada</option>
+          <option value="En Mantenimiento">En Mantenimiento</option>
+        </select>
+
+        <div class="modal-actions">
+          <button @click="addRoom">Agregar</button>
+          <button @click="closeAddRoomModal">Cancelar</button>
+        </div>
+      </div>
+    </div>
 
     <!-- Tabla de Reservas -->
 <section v-if="activeSection === 'reservas'" class="reservations-section">
@@ -85,6 +108,40 @@
       </div>
     </div>
   </div>
+  <!-- Tabla de Usuarios -->
+  <section v-if="activeSection === 'usuarios'" class="users-section">
+      <h3>Usuarios</h3>
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Correo</th>
+            <th>Contraseña</th>
+            <th>Número de Teléfono</th>
+            <th>Edad</th>
+            <th>Cédula</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="user in users" :key="user.id">
+            <td>{{ user.firstName }}</td>
+            <td>{{ user.lastName }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.password }}</td>
+            <td>{{ user.phone }}</td>
+            <td>{{ user.age }}</td>
+            <td>{{ user.idNumber }}</td>
+            <td>
+              <button @click="editUser(user)">Editar</button>
+              <button @click="deleteUser(user.id)">Borrar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
 </template>
 
 <script>
@@ -94,12 +151,22 @@ export default {
       activeSection: 'habitaciones',
       rooms: [], // Arreglo para almacenar habitaciones
       reservations: [], // Arreglo para almacenar reservas
+      users: [],
       showEditModal: false,
       currentReservation: null,
       selectedStatus: '',
+      showAddRoomModal: false, // Controla la visibilidad del modal para agregar habitación
+      newRoom: { room_type: '', status: 'Disponible' },
     };
   },
   methods: {
+    openAddRoomModal() {
+      this.showAddRoomModal = true;
+    },
+    closeAddRoomModal() {
+      this.showAddRoomModal = false;
+      this.newRoom = { room_type: '', status: 'Disponible' };
+    },
     async createReservation(newReservation) {
       try {
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value; // Obtén el token CSRF de tu HTML, si usas sesiones
@@ -142,6 +209,9 @@ export default {
     },
     bhReservas() {
       this.activeSection = 'reservas';
+    },
+    bhUsuarios() {
+      this.activeSection = 'usuarios';
     },
     logout() {
       localStorage.removeItem('isAuthenticated');
@@ -206,9 +276,6 @@ export default {
 };
 </script>
 
-<style scoped>
-/* Aquí va el estilo, basado en tu código original */
-</style>
 
 
 <style scoped>
@@ -255,28 +322,31 @@ export default {
 }
 
 /* Estilos de tablas */
-.rooms-section, .reservations-section {
-  margin: 20px 0;
+.rooms-section, .reservations-section,.users-section {
   padding: 20px;
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  margin-left: 20px;
+  margin-right: 20px ;
+  font: 1em sans-serif;
 }
 
-.rooms-section h3, .reservations-section h3 {
+
+.rooms-section h3, .reservations-section h3, .users-section h3 {
   color: #2c3e50;
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 15px;
 }
 
-.rooms-table, .reservations-table {
+.rooms-table, .reservations-table,.users-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
 }
 
-.rooms-table th, .reservations-table th {
+.rooms-table th, .reservations-table th, .users-table th{
   padding: 12px;
   background-color: #34495e; /* Fondo oscuro en encabezado de tabla */
   color: #ffffff;
@@ -285,15 +355,20 @@ export default {
   border-bottom: 3px solid #2c3e50;
 }
 
-.rooms-table td, .reservations-table td {
+.rooms-table td, .reservations-table td, .users-table td {
   padding: 12px;
   border-bottom: 1px solid #ddd;
   color: #333333;
 }
 
-.rooms-table tr:hover, .reservations-table tr:hover {
+.rooms-table tr:hover, .reservations-table tr:hover, .users-table tr:hover {
   background-color: #eaf1f8; /* Efecto hover para filas */
 }
+
+
+
+
+
 
 button {
   background-color: #27ae60; /* Botón verde para acciones */
@@ -395,6 +470,8 @@ button:disabled {
     width: 100%;
     max-width: 350px;
   }
+  
+
 }
 
 @media (max-width: 480px) {
